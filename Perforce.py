@@ -93,7 +93,7 @@ def GetUserFromClientspec():
 def GetClientRoot(in_dir):
     # check if the file is in the depot
     command = ConstructCommand('p4 info')
-    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=global_folder, shell=True)
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=in_dir, shell=True)
     result, err = p.communicate()
     result = result.decode("utf-8")
     err = err.decode("utf-8")
@@ -108,7 +108,7 @@ def GetClientRoot(in_dir):
         # sometimes the clientspec is not displayed 
         sublime.error_message("Perforce Plugin: p4 info didn't supply a valid clientspec, launching p4 client");
         command = ConstructCommand('p4 client')
-        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=global_folder, shell=True)
+        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=in_dir, shell=True)
         result, err = p.communicate()
         return -1
             
@@ -230,7 +230,7 @@ def AppendToChangelistDescription(changelist, input):
 
 def PerforceCommandOnFile(in_command, in_folder, in_filename):
     command = ConstructCommand('p4 {0} "{1}"'.format(in_command, in_filename))
-    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=global_folder, shell=True)
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=in_folder, shell=True)
     result, err = p.communicate()
     result = result.decode("utf-8")
     err = err.decode("utf-8")
@@ -329,9 +329,6 @@ class PerforceAutoAdd(sublime_plugin.EventListener):
         # file already exists, no need to add
         if view.file_name() and os.path.isfile(view.file_name()):
             return
-
-        global global_folder
-        global_folder, filename = os.path.split(view.file_name())
 
         perforce_settings = sublime.load_settings('Perforce.sublime-settings')
 
