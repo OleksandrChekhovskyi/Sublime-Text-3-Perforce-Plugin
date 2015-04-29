@@ -296,7 +296,7 @@ class PerforceAutoCheckout(sublime_plugin.EventListener):
             return
               
         if(view.is_dirty()):
-            success, message = Checkout(view.file_name())
+            success, message = Checkout(os.path.realpath(view.file_name()))
             LogResults(success, message);
 
     def on_pre_save(self, view):
@@ -307,7 +307,7 @@ class PerforceAutoCheckout(sublime_plugin.EventListener):
             return
               
         if(view.is_dirty()):
-            success, message = Checkout(view.file_name())
+            success, message = Checkout(os.path.realpath(view.file_name()))
             LogResults(success, message);
 
 class PerforceCheckoutCommand(sublime_plugin.TextCommand):
